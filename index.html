@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>Noura — Your Cycle Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#F8F5FC;font-family:'Nunito Sans',sans-serif;color:#2C2826;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+.app{max-width:430px;margin:0 auto;min-height:100dvh;position:relative}
+:root{--bg:#F8F5FC;--card:#FFF;--text:#2C2826;--soft:#9B8FB8;--accent:#7C5CB5;--al:#EDE7F8;--ag:#D4C8F0;--bdr:#EDE7F8;--shd:0 2px 16px rgba(124,92,181,.08);--grn:#6BA68A;--wrm:#D4A574;--rose:#C4836A;--men:#9B7EC8;--fol:#6BA68A;--ovu:#D4A574;--lut:#C4836A}
+.sf{font-family:'Cormorant Garamond',Georgia,serif}.it{font-style:italic}
+
+/* Onboarding */
+.ob{display:flex;flex-direction:column;min-height:100dvh;background:var(--bg)}
+.ob-prog{padding:16px 24px 0}.ob-trk{display:flex;gap:4px}.ob-sg{flex:1;height:3px;border-radius:2px;background:var(--bdr);transition:.3s}.ob-sg.d{background:var(--accent)}.ob-n{font-size:12px;color:var(--soft);margin-top:6px}
+.ob-c{flex:1;display:flex;align-items:center;justify-content:center}.ob-p{padding:20px 24px;width:100%}
+.ob-t{font-size:23px;font-weight:600;margin-bottom:6px}.ob-s{font-size:14px;color:var(--soft);margin-bottom:20px;line-height:1.5}
+.ob-nav{padding:0 24px 32px;display:flex;gap:10px}
+.wel{text-align:center;padding:50px 24px}.wel h1{font-size:34px;font-weight:600;margin-bottom:10px}.wel p{color:var(--soft);font-size:16px;line-height:1.7;max-width:300px;margin:0 auto}.wel .nt{font-size:13px;margin:28px auto 32px}
+
+/* Buttons */
+.btn{padding:12px 24px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:.3px;transition:.2s}.btn:disabled{opacity:.35;cursor:default}
+.btn-b{padding:14px 48px;font-size:16px}.btn-o{padding:12px 24px;border-radius:12px;border:1.5px solid var(--bdr);background:0 0;color:var(--text);font-size:15px;cursor:pointer;font-family:inherit}
+.btn-f{width:100%}
+
+/* Inputs */
+.inp{width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid var(--bdr);font-size:15px;font-family:inherit;background:var(--bg);outline:0;color:var(--text);transition:.2s;box-sizing:border-box}.inp:focus{border-color:var(--accent)}
+.inp-s{width:110px}.inp-r{display:flex;align-items:center;gap:10px}.inp-h{color:var(--soft);font-size:14px}
+.txa{width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid var(--bdr);font-size:15px;font-family:inherit;background:var(--bg);outline:0;color:var(--text);resize:vertical;line-height:1.6;box-sizing:border-box}.txa:focus{border-color:var(--accent)}
+
+/* Chips */
+.cps{display:flex;flex-wrap:wrap;gap:8px}
+.cp{padding:8px 16px;border-radius:24px;border:1.5px solid var(--bdr);background:0 0;color:var(--soft);font-size:13px;cursor:pointer;font-family:inherit;transition:.15s}
+.cp.on{border-color:var(--accent);background:var(--al);color:var(--accent);font-weight:600}
+
+/* Mood/Energy text buttons */
+.mood-grid{display:flex;flex-wrap:wrap;gap:8px}
+.mood-btn{padding:10px 18px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--bg);color:var(--soft);font-size:14px;cursor:pointer;font-family:inherit;transition:.15s;font-weight:500}
+.mood-btn.on{border-color:var(--accent);background:var(--al);color:var(--accent);font-weight:700}
+.nrg-row{display:flex;gap:8px}
+.nrg-btn{flex:1;padding:14px 10px;border-radius:12px;border:1.5px solid var(--bdr);background:var(--bg);color:var(--soft);font-size:14px;cursor:pointer;font-family:inherit;transition:.15s;text-align:center;font-weight:500}
+.nrg-btn.on{border-color:var(--accent);background:var(--al);color:var(--accent);font-weight:700}
+
+/* Header */
+.hdr{padding:20px 24px 16px;background:linear-gradient(135deg,#3A2D5C,#4E3D73)}.hdr-r{display:flex;justify-content:space-between;align-items:flex-start}
+.h-nm{font-size:13px;color:#C4B8E0;letter-spacing:.5px}.h-tt{font-size:28px;color:#F0EAF9;font-weight:600;margin-top:2px}.h-ph{margin-top:10px;display:flex;align-items:center;gap:8px;font-size:13px;color:#C4B8E0}
+.rst{background:0 0;border:0;color:#9B8FB8;font-size:18px;cursor:pointer;padding:4px 8px}
+
+/* Tabs */
+.tbs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;background:#fff;border-top:1px solid var(--bdr);padding:6px 0 env(safe-area-inset-bottom,8px);z-index:100}
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:0 0;border:0;cursor:pointer;padding:8px 4px}
+.tb-i{font-size:20px}.tb-l{font-size:10px;letter-spacing:.3px}
+
+/* Content / Cards */
+.ct{padding:16px 20px 90px}
+.cd{background:var(--card);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:var(--shd);border:1px solid var(--bdr)}
+.cd-a{background:var(--card);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:var(--shd);border:1px solid var(--bdr);border-left:4px solid}
+.lb{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--soft);margin-bottom:10px}
+.st{font-size:20px;font-weight:600;margin:0 0 6px}.bd{font-size:14px;line-height:1.7;color:#5A5550}
+.ai-cd{background:linear-gradient(135deg,#F5F0FF,#FFF8F3);border-radius:16px;padding:18px 20px;margin-bottom:14px;border:1px solid var(--ag)}
+
+/* Phase strip */
+.ps{display:flex;gap:3px;margin:12px 0 4px}.pb{flex:1;height:6px;border-radius:3px;background:var(--bdr);transition:.3s}
+
+/* Date nav */
+.dn{display:flex;justify-content:space-between;align-items:center;padding:4px 0 14px}
+.db{background:var(--bg);border:1px solid var(--bdr);border-radius:10px;padding:6px 16px;font-size:16px;cursor:pointer;color:var(--accent)}
+
+/* Macro bars */
+.macro-row{display:flex;gap:12px;margin-top:12px}
+.macro-col{flex:1;text-align:center}
+.macro-bar-bg{height:8px;border-radius:4px;background:var(--bdr);margin-top:6px;overflow:hidden}
+.macro-bar{height:100%;border-radius:4px;transition:width .5s}
+.macro-val{font-size:18px;font-weight:700;margin-top:4px}
+.macro-lbl{font-size:11px;color:var(--soft);text-transform:uppercase;letter-spacing:.5px}
+
+/* Meal cards */
+.m-row{padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.m-tp{font-size:11px;color:var(--accent);text-transform:uppercase;font-weight:700;letter-spacing:.5px}
+.m-nm{margin:3px 0 0;font-weight:500;font-size:15px}
+.m-tm{font-size:12px;color:var(--soft)}
+.m-mac{font-size:11px;color:var(--soft);margin-top:3px}
+.m-cal{font-weight:600;font-size:14px}
+.xb{background:0 0;border:0;color:#CCC;font-size:18px;cursor:pointer}
+.add-b{width:100%;padding:16px;border-radius:14px;border:2px dashed var(--bdr);background:0 0;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+
+/* Photo upload */
+.photo-area{border:2px dashed var(--bdr);border-radius:14px;padding:24px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:12px;position:relative;overflow:hidden}
+.photo-area:hover{border-color:var(--accent);background:var(--al)}
+.photo-area img{max-width:100%;border-radius:10px;margin-top:8px}
+.photo-icon{font-size:32px;margin-bottom:8px;display:block}
+.photo-txt{font-size:13px;color:var(--soft)}
+.photo-input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+/* Suggest card */
+.sug{background:linear-gradient(135deg,#F5F0FF,#F0FFF5);border-radius:14px;padding:16px;margin-bottom:10px;border:1px solid var(--ag)}
+.sug-tp{font-size:11px;color:var(--accent);text-transform:uppercase;font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.sug-nm{font-size:16px;font-weight:600;margin-bottom:4px}
+.sug-ds{font-size:13px;color:#5A5550;line-height:1.5}
+.sug-tg{display:inline-block;margin-top:6px;font-size:11px;padding:3px 10px;border-radius:10px;background:var(--al);color:var(--accent);font-weight:600}
+
+/* Grocery */
+.gr-it{padding:8px 0;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between}.gr-it:last-child{border:0}
+.gr-nm{font-size:14px}.gr-why{font-size:12px;color:var(--soft)}
+
+/* Period banner */
+.p-ban{background:linear-gradient(135deg,#4E3D73,#3A2D5C);border-radius:16px;padding:18px 20px;margin-bottom:14px;color:#F0EAF9}
+.p-ban .lb{color:#C4B8E0}.p-ban .inp{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#F0EAF9}.p-ban .inp:focus{border-color:var(--ag)}
+.p-ban .btn{background:#C4B8E0;color:#3A2D5C}
+
+/* Chat */
+.ch-w{display:flex;flex-direction:column;min-height:calc(100dvh - 170px)}.ch-m{flex:1;padding-bottom:10px}
+.msg{display:flex;margin-bottom:10px}.msg-u{justify-content:flex-end}.msg-n{justify-content:flex-start}
+.bub{max-width:80%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.6}
+.bub-u{background:var(--accent);color:#fff;border-bottom-right-radius:4px}.bub-n{background:var(--card);color:var(--text);box-shadow:var(--shd);border:1px solid var(--bdr);border-bottom-left-radius:4px}
+.ch-in{display:flex;gap:8px;padding-top:8px;border-top:1px solid var(--bdr)}
+
+.nw{margin-left:auto;font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700;color:#fff}
+
+/* Noura speaking */
+.noura-speak{background:linear-gradient(135deg,#F5F0FF,#FFF8F3);border-radius:16px;padding:20px;margin-bottom:14px;border:1px solid var(--ag)}
+.noura-speak .greeting{font-size:22px;font-weight:600;margin-bottom:8px;line-height:1.3}
+.noura-speak .msg-body{font-size:15px;line-height:1.7;color:#5A5550}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+const PH=["menstrual","follicular","ovulation","luteal"];
+const PD={
+  menstrual:{emoji:"🌙",label:"Menstrual",days:"Days 1–5",hex:"#9B7EC8",
+    greeting:"Be gentle with yourself today.",speak:"Your body is doing important work right now. Energy is low, and that's not a problem to fix. It's a signal to listen to. Today, focus on warmth and nourishment. Iron-rich foods will help replenish what you're losing.",
+    nutrition:"Iron-rich foods: lentils, dark leafy greens, red meat. Warm, cooked meals over raw. Gentle on digestion.",
+    movement:"Gentle yoga, walking, stretching. Not the time to push.",
+    avoid:"Intense HIIT, heavy lifting, skipping meals.",
+    groceries:[{n:"Spinach & kale",w:"Iron to replenish"},{n:"Lentils or chickpeas",w:"Plant iron + protein"},{n:"Dark chocolate 70%+",w:"Magnesium for cramps"},{n:"Ginger & turmeric",w:"Anti-inflammatory"},{n:"Salmon or sardines",w:"Omega-3"},{n:"Sweet potatoes",w:"Gentle carbs, vitamin A"},{n:"Bone broth or miso",w:"Warming, mineral-rich"}],
+    meals:[{t:"breakfast",n:"Scrambled eggs with sautéed spinach & sourdough",d:"Savoury, iron-rich, warming start",tg:"iron + warmth",cal:420,p:28,c:35,f:18},
+      {t:"lunch",n:"Lentil soup with turmeric & crusty bread",d:"Anti-inflammatory, easy to digest, nourishing",tg:"replenish",cal:480,p:22,c:58,f:12},
+      {t:"dinner",n:"Salmon with roasted sweet potato & greens",d:"Omega-3 for inflammation, gentle carbs",tg:"omega-3 + recovery",cal:520,p:35,c:42,f:20},
+      {t:"snack",n:"Dark chocolate squares with almonds",d:"Magnesium to ease cramps",tg:"magnesium",cal:180,p:5,c:14,f:12}]},
+  follicular:{emoji:"🌱",label:"Follicular",days:"Days 6–12",hex:"#6BA68A",
+    greeting:"You're building momentum.",speak:"Estrogen is rising. You'll notice your thinking getting sharper, your mood lifting, your appetite feeling more balanced. This is a great time for lighter, fresher food and to try something new with your workouts.",
+    nutrition:"Lighter, fresh meals. Lean proteins, fermented foods, plenty of greens. Your digestion is efficient.",
+    movement:"Try something new. Cardio, dance, strength training. You recover faster now.",
+    avoid:"Heavy, rich foods. Your body wants fresh and light.",
+    groceries:[{n:"Fresh salad greens & herbs",w:"Light, estrogen-supporting"},{n:"Eggs (free-range)",w:"Protein for building"},{n:"Kimchi or yogurt",w:"Gut health"},{n:"Broccoli & cauliflower",w:"Estrogen metabolism"},{n:"Chicken or tofu",w:"Lean protein"},{n:"Citrus fruits",w:"Vitamin C, energy"},{n:"Quinoa or farro",w:"Light grains"}],
+    meals:[{t:"breakfast",n:"Smoked salmon on rye with cream cheese & capers",d:"Protein-rich, savoury, omega-3",tg:"energy + protein",cal:380,p:26,c:28,f:16},
+      {t:"lunch",n:"Grain bowl with roasted broccoli, egg & kimchi",d:"Gut-friendly, protein-packed",tg:"gut health",cal:450,p:24,c:48,f:16},
+      {t:"dinner",n:"Herb chicken with citrus salad & quinoa",d:"Lean, bright, seasonal",tg:"lean + light",cal:490,p:38,c:40,f:14},
+      {t:"snack",n:"Greek yogurt with berries & honey",d:"Probiotic, natural sweetness",tg:"probiotic",cal:160,p:12,c:22,f:3}]},
+  ovulation:{emoji:"✦",label:"Ovulation",days:"Days 13–16",hex:"#D4A574",
+    greeting:"You're at your peak.",speak:"This is your power window. Estrogen and testosterone are both high. You might feel more social, more confident, more energetic. Your body handles carbs beautifully right now, so enjoy them. Stay hydrated.",
+    nutrition:"Whole grains, fruits, lighter proteins. Your body uses carbs well now. Hydrate.",
+    movement:"Peak performance. If you have a personal best in you, it's this week.",
+    avoid:"Overcommitting. You feel invincible but still need rest.",
+    groceries:[{n:"Fresh berries",w:"Antioxidants at peak"},{n:"Whole grain bread/pasta",w:"Carbs used efficiently"},{n:"Bell peppers & tomatoes",w:"Vitamin C, vibrant"},{n:"White fish or shrimp",w:"Light protein"},{n:"Cucumber & watermelon",w:"Hydration"},{n:"Fresh herbs",w:"Elevate simple dishes"},{n:"Avocado",w:"Healthy fats"}],
+    meals:[{t:"breakfast",n:"Avocado & halloumi on sourdough with chilli flakes",d:"Savoury, satisfying, healthy fats",tg:"fuel + peak",cal:440,p:22,c:36,f:24},
+      {t:"lunch",n:"Mediterranean pasta with fresh vegetables",d:"Carb-friendly, hydrating, seasonal",tg:"carbs + energy",cal:520,p:18,c:68,f:16},
+      {t:"dinner",n:"Grilled fish with roasted vegetables & lemon",d:"Light protein, peak energy",tg:"light + peak",cal:420,p:36,c:28,f:14},
+      {t:"snack",n:"Fresh fruit with a handful of nuts",d:"Hydrating, natural energy",tg:"hydration",cal:170,p:5,c:24,f:8}]},
+  luteal:{emoji:"🍂",label:"Luteal",days:"Days 17–28",hex:"#C4836A",
+    greeting:"Your body is asking for more.",speak:"Progesterone is rising and your body genuinely needs more fuel, around 100–300 extra calories. The cravings you feel aren't weakness. They're your body telling you what it needs. Complex carbs, magnesium, and comfort food are all fair game.",
+    nutrition:"Complex carbs, magnesium-rich foods, dark chocolate. Your calorie need is genuinely higher.",
+    movement:"Moderate: pilates, swimming, steady cardio. Honour what feels right.",
+    avoid:"Restricting too hard. Your metabolism is higher this week.",
+    groceries:[{n:"Bananas",w:"Magnesium + serotonin"},{n:"Nuts & nut butter",w:"Healthy fats, satisfying"},{n:"Whole grain rice or oats",w:"Complex carbs"},{n:"Dark chocolate 70%+",w:"Magnesium, no guilt"},{n:"Root vegetables",w:"Grounding, warming"},{n:"Turkey or red meat",w:"Iron prep"},{n:"Chamomile tea",w:"Calming, sleep support"}],
+    meals:[{t:"breakfast",n:"Cheese & mushroom omelette with sourdough",d:"Savoury, protein-rich, grounding",tg:"protein + comfort",cal:460,p:30,c:32,f:22},
+      {t:"lunch",n:"Roasted root veg & grain bowl with tahini",d:"Warming, complex carbs, satisfying",tg:"warmth + sustain",cal:520,p:16,c:62,f:22},
+      {t:"dinner",n:"Turkey stew with sweet potato & greens",d:"Iron-rich, comforting, hearty",tg:"iron + nourish",cal:540,p:38,c:48,f:16},
+      {t:"snack",n:"Trail mix with dark chocolate & dried fruit",d:"Cravings met, magnesium up",tg:"cravings + magnesium",cal:200,p:6,c:22,f:12}]}
+};
+
+const MOODS=["Good","Calm","Low","Irritable","Exhausted","Loving","Anxious","Nauseous"];
+const NRGS=["Low","Okay","High"];
+const SYMS=["Cramps","Bloating","Headache","Fatigue","Cravings","Breast tenderness","Back pain","Mood swings","Clear skin","Good sleep","Insomnia","Acne","Digestive issues"];
+const GOALS=["Lose weight","Understand my hormones","Eat better by phase","Manage cravings","More energy","Feel in control"];
+const CHALL=["I eat well but can't lose weight","Constant cravings before my period","Energy crashes mid-cycle","I don't know what to eat when","Bloating and digestion issues","Emotional eating"];
+const DIETS=["No restriction","Vegetarian","Vegan","Halal","Kosher","Pescatarian"];
+const ALLRG=["Gluten","Dairy","Nuts","Eggs","Soy","Shellfish","None"];
+const FPREF=["I prefer savoury breakfasts","I like cooking from scratch","I prefer quick/simple meals","I eat the same things often","I like trying new recipes"];
+
+const td=()=>new Date().toISOString().slice(0,10);
+function dayOf(p){if(!p)return null;const d=Math.floor((new Date(td()+"T12:00:00")-new Date(p+"T12:00:00"))/864e5)+1;return d>0?((d-1)%28)+1:null;}
+function ph(d){if(!d)return null;if(d<=5)return"menstrual";if(d<=12)return"follicular";if(d<=16)return"ovulation";return"luteal";}
+function dfmt(d){return new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});}
+function dlong(d){return new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});}
+function mname(){return new Date().toLocaleDateString("en-US",{month:"long"});}
+
+let S={screen:"ob",step:0,tab:"today",
+  profile:null,
+  ob:{name:"",periodStart:"",cycleLength:"28",age:"",goals:[],challenge:"",diet:"No restriction",dietOther:"",allergies:[],calorieTarget:"1800",exerciseFreq:"",foodPrefs:[],notes:""},
+  journal:{},curDate:td(),
+  meals:[],mealAdd:false,mealN:"",mealC:"",mealP:"",mealCb:"",mealF:"",mealT:"lunch",mealFB:null,mealPhotos:{},
+  chat:[],chatIn:"",
+  periods:[],newPD:td()};
+
+try{const p=localStorage.getItem("noura_profile");if(p){S.profile=JSON.parse(p);S.screen="main";}
+const j=localStorage.getItem("noura_journal");if(j)S.journal=JSON.parse(j);
+const m=localStorage.getItem("noura_meals_"+td());if(m)S.meals=JSON.parse(m);
+const pr=localStorage.getItem("noura_periods");if(pr)S.periods=JSON.parse(pr);
+const ch=localStorage.getItem("noura_chat");if(ch)S.chat=JSON.parse(ch);
+}catch(e){}
+function sv(k,v){localStorage.setItem("noura_"+k,JSON.stringify(v));}
+
+function R(){document.getElementById("app").innerHTML=S.screen==="ob"?rOB():rMain();}
+
+// ═══ ONBOARDING ═══
+function rOB(){
+  const s=S.step,o=S.ob;
+  if(s===0)return`<div class="ob"><div class="ob-c"><div class="wel">
+    <div style="font-size:52px;margin-bottom:20px">🌙</div>
+    <h1 class="sf it">Welcome to Noura</h1>
+    <p>Your cycle companion. I'll learn your rhythm and help you eat, move, and feel better, phase by phase.</p>
+    <p class="nt">This takes about 2 minutes.</p>
+    <button class="btn btn-b" onclick="S.step++;R()">Let's begin</button>
+  </div></div></div>`;
+
+  const Q=[null,
+    {t:"What should I call you?",s:"Just your first name is perfect.",h:`<input class="inp" value="${o.name}" oninput="S.ob.name=this.value" placeholder="Your name" autofocus/>`},
+    {t:"When did your last period start?",s:"Your best guess is fine. This is how I'll know your phase.",h:`<input type="date" class="inp" value="${o.periodStart}" onchange="S.ob.periodStart=this.value;R()"/>`},
+    {t:"How long is your cycle usually?",s:"Most cycles are 24–35 days. 28 is average.",h:`<div class="inp-r"><input type="number" class="inp inp-s" value="${o.cycleLength}" oninput="S.ob.cycleLength=this.value"/><span class="inp-h">days</span></div>`},
+    {t:"How old are you?",s:"Helps me understand where you are hormonally.",h:`<input type="number" class="inp inp-s" value="${o.age}" oninput="S.ob.age=this.value" placeholder="Age"/>`},
+    {t:"What brought you to Noura?",s:"Pick all that apply.",h:`<div class="cps">${GOALS.map(g=>`<button class="cp ${o.goals.includes(g)?'on':''}" onclick="tglG('${g}')">${g}</button>`).join("")}</div>`},
+    {t:"What's your biggest struggle?",s:"No judgment. Just so I know where to help.",h:`<div class="cps">${CHALL.map(c=>`<button class="cp ${o.challenge===c?'on':''}" onclick="S.ob.challenge='${c.replace(/'/g,"\\'")}';R()">${c}</button>`).join("")}</div>`},
+    {t:"Any dietary preferences?",s:"I'll tailor every suggestion to this.",h:`<div class="cps" style="margin-bottom:12px">${DIETS.map(d=>`<button class="cp ${o.diet===d?'on':''}" onclick="S.ob.diet='${d}';R()">${d}</button>`).join("")}</div><input class="inp" value="${o.dietOther}" oninput="S.ob.dietOther=this.value" placeholder="Anything specific? (e.g. I don't eat pork)" style="margin-top:4px"/>`},
+    {t:"Any food allergies or intolerances?",s:"Select all that apply.",h:`<div class="cps">${ALLRG.map(a=>`<button class="cp ${o.allergies.includes(a)?'on':''}" onclick="tglAl('${a}')">${a}</button>`).join("")}</div>`},
+    {t:"Tell me about your food style.",s:"Pick all that apply. This helps me suggest meals you'll actually want to eat.",h:`<div class="cps">${FPREF.map(f=>`<button class="cp ${o.foodPrefs.includes(f)?'on':''}" onclick="tglFP('${f}')">${f}</button>`).join("")}</div>`},
+    {t:"Do you have a daily calorie target?",s:"This powers the meal tracker. You can change it anytime.",h:`<div class="inp-r"><input type="number" class="inp inp-s" value="${o.calorieTarget}" oninput="S.ob.calorieTarget=this.value"/><span class="inp-h">kcal / day</span></div>`},
+    {t:"How often do you move your body?",s:"Walking counts. Everything counts.",h:`<div class="cps">${["Rarely","1–2x / week","3–4x / week","5+ / week"].map(f=>`<button class="cp ${o.exerciseFreq===f?'on':''}" onclick="S.ob.exerciseFreq='${f}';R()">${f}</button>`).join("")}</div>`},
+    {t:"Anything else I should know?",s:"Health conditions, medications, or how you're feeling today. Completely optional.",h:`<textarea class="txa" rows="3" oninput="S.ob.notes=this.value" placeholder="Write anything here...">${o.notes}</textarea>`}
+  ];
+
+  const q=Q[s],last=s===12;
+  const ok=s===1?o.name.trim():s===2?o.periodStart:true;
+  return`<div class="ob">
+    <div class="ob-prog"><div class="ob-trk">${Array.from({length:12},(_,i)=>`<div class="ob-sg ${i<s?'d':''}"></div>`).join("")}</div><div class="ob-n">${s} of 12</div></div>
+    <div class="ob-c"><div class="ob-p"><h2 class="ob-t sf it">${q.t}</h2><p class="ob-s">${q.s}</p>${q.h}</div></div>
+    <div class="ob-nav">
+      <button class="btn-o" onclick="S.step--;R()">Back</button>
+      ${last?`<button class="btn" style="flex:1" onclick="finOB()">Start my journey</button>`
+            :`<button class="btn" style="flex:1" onclick="S.step++;R()" ${ok?'':`disabled`}>Continue</button>`}
+    </div></div>`;
+}
+
+// ═══ MAIN ═══
+function rMain(){
+  const p=S.profile,dc=dayOf(p.periodStart),phase=ph(dc),pd=phase?PD[phase]:null;
+  const TB=[{id:"today",i:"☀️",l:"TODAY"},{id:"journal",i:"📝",l:"JOURNAL"},{id:"meals",i:"🍽",l:"MEALS"},{id:"chat",i:"💬",l:"CHAT"},{id:"guide",i:"🌙",l:"GUIDE"}];
+  let tc="";
+  if(S.tab==="today")tc=rToday(p,phase,dc,pd);
+  else if(S.tab==="journal")tc=rJournal(p,phase,dc);
+  else if(S.tab==="meals")tc=rMeals(p,phase,dc,pd);
+  else if(S.tab==="chat")tc=rChat(p,phase,dc);
+  else if(S.tab==="guide")tc=rGuide(phase,dc);
+
+  return`<div class="hdr"><div class="hdr-r"><div>
+    <div class="h-nm">Hi ${p.name}</div><div class="h-tt sf it">Noura</div>
+  </div><button class="rst" onclick="resetApp()">↺</button></div>
+  ${pd?`<div class="h-ph"><span>${pd.emoji}</span>${pd.label} phase · day ${dc}</div>`:''}</div>
+  ${tc}
+  <div class="tbs">${TB.map(t=>`<button class="tb" onclick="S.tab='${t.id}';R()">
+    <span class="tb-i" style="opacity:${S.tab===t.id?1:.4}">${t.i}</span>
+    <span class="tb-l" style="color:${S.tab===t.id?'var(--accent)':'var(--soft)'};font-weight:${S.tab===t.id?700:400}">${t.l}</span>
+  </button>`).join("")}</div>`;
+}
+
+// ── TODAY ──
+function rToday(p,phase,dc,pd){
+  if(!pd)return`<div class="ct"><div class="cd"><p class="bd">Log your period start in the Guide tab to begin.</p></div></div>`;
+  const hr=new Date().getHours(),mi=hr<11?0:hr<15?1:hr<18?3:2;
+  const m=pd.meals[mi];
+  return`<div class="ct">
+    <div class="noura-speak">
+      <div class="greeting sf it" style="color:${pd.hex}">${pd.greeting}</div>
+      <p class="msg-body">${pd.speak}</p>
+      <div class="ps">${PH.map(x=>`<div class="pb" style="background:${x===phase?PD[x].hex:'var(--bdr)'}"></div>`).join("")}</div>
+    </div>
+
+    <div class="sug">
+      <div class="sug-tp">Noura suggests for ${["breakfast","lunch","snack","dinner"][mi]}</div>
+      <div class="sug-nm sf">${m.n}</div>
+      <div class="sug-ds">${m.d}</div>
+      <div style="display:flex;gap:12px;margin-top:8px">
+        <span class="sug-tg">${m.cal} kcal</span>
+        <span class="sug-tg" style="background:var(--bg)">${m.p}g protein</span>
+        <span class="sug-tg" style="background:var(--bg)">${m.tg}</span>
+      </div>
+    </div>
+
+    <div class="cd"><div class="lb">How to move today</div><p class="bd">${pd.movement}</p></div>
+    <div class="cd"><div class="lb">What to avoid</div><p class="bd">${pd.avoid}</p></div>
+  </div>`;
+}
+
+// ── JOURNAL ──
+function rJournal(p,phase,dc){
+  const d=S.curDate,en=S.journal[d]||{};
+  return`<div class="ct">
+    <div class="dn"><button class="db" onclick="chD(-1)">←</button><span style="font-weight:600;font-size:15px">${dfmt(d)}</span><button class="db" onclick="chD(1)">→</button></div>
+    <div class="cd"><div class="lb">Mood</div><div class="mood-grid">${MOODS.map(m=>`<button class="mood-btn ${en.mood===m?'on':''}" onclick="uJ('mood','${m}')">${m}</button>`).join("")}</div></div>
+    <div class="cd"><div class="lb">Energy</div><div class="nrg-row">${NRGS.map(e=>`<button class="nrg-btn ${en.energy===e?'on':''}" onclick="uJ('energy','${e}')">${e}</button>`).join("")}</div></div>
+    <div class="cd"><div class="lb">Symptoms</div><div class="cps">${SYMS.map(sy=>`<button class="cp ${(en.symptoms||[]).includes(sy)?'on':''}" onclick="tglSy('${sy}')">${sy}</button>`).join("")}</div></div>
+    <div class="cd"><div class="lb">Weight</div><div class="inp-r"><input type="number" step="0.1" class="inp inp-s" value="${en.weight||''}" oninput="uJ('weight',this.value)" placeholder="—"/><span class="inp-h">kg</span></div></div>
+    <div class="cd"><div class="lb">Notes</div><textarea class="txa" rows="3" oninput="uJ('notes',this.value)" placeholder="How are you really feeling today?">${en.notes||''}</textarea></div>
+    <button class="btn btn-f" style="margin-bottom:14px" onclick="subJ()">Check in with Noura</button>
+    ${en.aiR?`<div class="ai-cd"><p class="bd" style="font-style:italic">${en.aiR}</p></div>`:''}
+  </div>`;
+}
+
+// ── MEALS ──
+function rMeals(p,phase,dc,pd){
+  const tgt=parseInt(p.calorieTarget)||1800;
+  const tot=S.meals.reduce((s,m)=>s+(m.cal||0),0);
+  const totP=S.meals.reduce((s,m)=>s+(m.p||0),0);
+  const totC=S.meals.reduce((s,m)=>s+(m.cb||0),0);
+  const totF=S.meals.reduce((s,m)=>s+(m.f||0),0);
+  const pct=Math.min(tot/tgt*100,100),over=tot>tgt;
+  const r=58,st=10,c=2*Math.PI*r,off=c-(pct/100)*c;
+
+  // Macro targets (rough estimates based on calorie target)
+  const pTgt=Math.round(tgt*0.25/4), cTgt=Math.round(tgt*0.45/4), fTgt=Math.round(tgt*0.30/9);
+
+  let form='';
+  if(S.mealAdd)form=`<div class="cd">
+    <div class="cps" style="margin-bottom:12px">${["breakfast","lunch","dinner","snack"].map(t=>`<button class="cp ${S.mealT===t?'on':''}" onclick="S.mealT='${t}';R()" style="text-transform:capitalize">${t}</button>`).join("")}</div>
+    <div class="photo-area" onclick="document.getElementById('photoIn').click()">
+      <input type="file" id="photoIn" accept="image/*" capture="environment" class="photo-input" onchange="handlePhoto(this)"/>
+      <span class="photo-icon">📸</span>
+      <span class="photo-txt">Take a photo of your plate (optional)</span>
+      <div id="photoPreview"></div>
+    </div>
+    <input class="inp" value="${S.mealN}" oninput="S.mealN=this.value" placeholder="What did you eat?"/>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <div style="flex:1"><input class="inp" value="${S.mealC}" oninput="S.mealC=this.value" placeholder="Calories" type="number"/><div class="inp-h" style="margin-top:2px;font-size:11px">kcal</div></div>
+      <div style="flex:1"><input class="inp" value="${S.mealP}" oninput="S.mealP=this.value" placeholder="Protein" type="number"/><div class="inp-h" style="margin-top:2px;font-size:11px">g protein</div></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <div style="flex:1"><input class="inp" value="${S.mealCb}" oninput="S.mealCb=this.value" placeholder="Carbs" type="number"/><div class="inp-h" style="margin-top:2px;font-size:11px">g carbs</div></div>
+      <div style="flex:1"><input class="inp" value="${S.mealF}" oninput="S.mealF=this.value" placeholder="Fat" type="number"/><div class="inp-h" style="margin-top:2px;font-size:11px">g fat</div></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn" style="flex:1" onclick="addM()">Add meal</button>
+      <button class="btn-o" onclick="S.mealAdd=false;R()">Cancel</button>
+    </div></div>`;
+  else form=`<button class="add-b" onclick="S.mealAdd=true;R()">+ Log a meal</button>`;
+
+  return`<div class="ct">
+    <div class="cd">
+      <div style="display:flex;align-items:center;gap:20px">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="${r}" fill="none" stroke="var(--bdr)" stroke-width="${st}"/>
+          <circle cx="70" cy="70" r="${r}" fill="none" stroke="${over?'var(--rose)':'var(--accent)'}" stroke-width="${st}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}" transform="rotate(-90 70 70)" style="transition:.6s"/>
+          <text x="70" y="65" text-anchor="middle" style="font-size:24px;font-weight:700;fill:${over?'var(--rose)':'var(--text)'};font-family:'Cormorant Garamond',serif">${tot}</text>
+          <text x="70" y="84" text-anchor="middle" style="font-size:12px;fill:var(--soft)">/&nbsp;${tgt} kcal</text>
+        </svg>
+        <div>
+          <div style="color:${over?'var(--rose)':'var(--grn)'};font-size:14px;font-weight:600;margin-bottom:4px">${over?'Over by '+(tot-tgt)+' kcal':(tgt-tot)+' kcal remaining'}</div>
+          <div style="color:var(--soft);font-size:13px">${S.meals.length} meal${S.meals.length!==1?'s':''} logged</div>
+        </div>
+      </div>
+      <div class="macro-row">
+        <div class="macro-col"><div class="macro-lbl">Protein</div><div class="macro-val" style="color:var(--accent)">${totP}g</div><div class="macro-bar-bg"><div class="macro-bar" style="width:${Math.min(totP/pTgt*100,100)}%;background:var(--accent)"></div></div><div style="font-size:10px;color:var(--soft);margin-top:2px">/ ${pTgt}g</div></div>
+        <div class="macro-col"><div class="macro-lbl">Carbs</div><div class="macro-val" style="color:var(--wrm)">${totC}g</div><div class="macro-bar-bg"><div class="macro-bar" style="width:${Math.min(totC/cTgt*100,100)}%;background:var(--wrm)"></div></div><div style="font-size:10px;color:var(--soft);margin-top:2px">/ ${cTgt}g</div></div>
+        <div class="macro-col"><div class="macro-lbl">Fat</div><div class="macro-val" style="color:var(--rose)">${totF}g</div><div class="macro-bar-bg"><div class="macro-bar" style="width:${Math.min(totF/fTgt*100,100)}%;background:var(--rose)"></div></div><div style="font-size:10px;color:var(--soft);margin-top:2px">/ ${fTgt}g</div></div>
+      </div>
+    </div>
+    ${S.mealFB?`<div class="ai-cd"><p class="bd" style="font-style:italic">${S.mealFB}</p></div>`:''}
+    ${S.meals.map((m,i)=>`<div class="cd m-row">
+      <div><div class="m-tp">${m.type}</div><div class="m-nm">${m.name}</div>
+      <div class="m-mac">${m.cal} kcal · ${m.p||0}g P · ${m.cb||0}g C · ${m.f||0}g F</div>
+      ${m.time?`<div class="m-tm">${m.time}</div>`:''}</div>
+      <button class="xb" onclick="rmM(${i})">×</button>
+    </div>`).join("")}
+    ${form}
+    ${pd?`<div class="cd"><div class="lb">Weekly groceries · ${mname()} · ${pd.label} phase</div>
+      ${pd.groceries.map(g=>`<div class="gr-it"><span class="gr-nm">${g.n}</span><span class="gr-why">${g.w}</span></div>`).join("")}
+    </div>`:''}
+    ${pd?`<div class="cd"><div class="lb">Meal ideas for ${pd.label} phase</div>
+      ${pd.meals.map(m=>`<div class="sug" style="margin-bottom:8px">
+        <div class="sug-tp">${m.t}</div><div class="sug-nm sf">${m.n}</div><div class="sug-ds">${m.d}</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+          <span class="sug-tg">${m.cal} kcal</span><span class="sug-tg" style="background:var(--bg)">${m.p}g P</span><span class="sug-tg" style="background:var(--bg)">${m.cb}g C</span><span class="sug-tg" style="background:var(--bg)">${m.f}g F</span>
+        </div></div>`).join("")}
+    </div>`:''}
+  </div>`;
+}
+
+// ── CHAT ──
+function rChat(p,phase,dc){
+  const sugg=["Why am I craving chocolate?","Should I skip the gym today?","What should I eat tonight?"];
+  return`<div class="ct ch-w">
+    <div class="ch-m">
+      ${S.chat.length===0?`<div style="text-align:center;padding:40px 10px;color:var(--soft)">
+        <div style="font-size:36px;margin-bottom:12px">🌙</div>
+        <p class="sf it" style="font-size:15px">Ask me anything about your cycle, food, or how you're feeling.</p>
+        <div class="cps" style="justify-content:center;margin-top:16px">${sugg.map(q=>`<button class="cp" onclick="S.chatIn='${q}';R()">${q}</button>`).join("")}</div>
+      </div>`:S.chat.map(m=>`<div class="msg msg-${m.r==='user'?'u':'n'}"><div class="bub bub-${m.r==='user'?'u':'n'}">${m.t}</div></div>`).join("")}
+    </div>
+    <div class="ch-in">
+      <input class="inp" style="flex:1" value="${(S.chatIn||'').replace(/"/g,'&quot;')}" oninput="S.chatIn=this.value" onkeydown="if(event.key==='Enter')sendC()" placeholder="Ask Noura anything..."/>
+      <button class="btn" style="padding:12px 18px" onclick="sendC()">→</button>
+    </div>
+  </div>`;
+}
+
+// ── GUIDE ──
+function rGuide(phase,dc){
+  return`<div class="ct">
+    <div class="p-ban">
+      <div class="lb">Log a new period</div>
+      <p style="font-size:14px;margin-bottom:12px;color:#C4B8E0">When did your period start? This updates your phase.</p>
+      <input type="date" class="inp" value="${S.newPD}" onchange="S.newPD=this.value"/>
+      <button class="btn" style="margin-top:10px;width:100%" onclick="logP()">Mark period start</button>
+    </div>
+    ${phase?`<div class="cd" style="text-align:center;padding:28px">
+      <div style="font-size:44px">${PD[phase].emoji}</div>
+      <div class="st sf it" style="color:${PD[phase].hex};margin-top:8px">${PD[phase].label} Phase</div>
+      <div style="color:var(--soft);font-size:14px;margin-top:4px">Day ${dc} of your cycle</div>
+      <div class="ps">${PH.map(x=>`<div class="pb" style="background:${x===phase?PD[x].hex:'var(--bdr)'}"></div>`).join("")}</div>
+    </div>`:''}
+    ${PH.map(x=>{const d=PD[x],cur=x===phase;
+      return`<div class="cd-a" style="border-left-color:${d.hex};opacity:${cur?1:.7}">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:22px">${d.emoji}</span>
+          <div><div class="sf it" style="font-size:16px;font-weight:600;color:${d.hex}">${d.label}</div><span style="font-size:12px;color:var(--soft)">${d.days}</span></div>
+          ${cur?`<span class="nw" style="background:${d.hex}">NOW</span>`:''}
+        </div>
+        <p style="font-size:13px;line-height:1.6;color:#5A5550;margin-bottom:6px">${d.nutrition}</p>
+        <p style="font-size:13px;line-height:1.6;color:var(--soft)">${d.movement}</p>
+      </div>`;}).join("")}
+    ${S.periods.length?`<div class="cd"><div class="lb">Period history</div>
+      ${S.periods.slice(0,8).map((d,i)=>`<div style="padding:8px 0;font-size:14px;border-bottom:${i<Math.min(S.periods.length,8)-1?'1px solid var(--bdr)':'none'}">${dlong(d)}</div>`).join("")}
+    </div>`:''}
+  </div>`;
+}
+
+// ═══ ACTIONS ═══
+function tglG(g){const a=S.ob.goals;if(a.includes(g))S.ob.goals=a.filter(x=>x!==g);else a.push(g);R();}
+function tglAl(a){const ar=S.ob.allergies;if(ar.includes(a))S.ob.allergies=ar.filter(x=>x!==a);else ar.push(a);R();}
+function tglFP(f){const a=S.ob.foodPrefs;if(a.includes(f))S.ob.foodPrefs=a.filter(x=>x!==f);else a.push(f);R();}
+function finOB(){const o=S.ob;S.profile={...o,calorieTarget:parseInt(o.calorieTarget)||1800,cycleLength:parseInt(o.cycleLength)||28};sv("profile",S.profile);S.screen="main";R();}
+function resetApp(){if(confirm("Reset all Noura data? This cannot be undone.")){Object.keys(localStorage).filter(k=>k.startsWith("noura_")).forEach(k=>localStorage.removeItem(k));location.reload();}}
+function chD(dir){const d=new Date(S.curDate);d.setDate(d.getDate()+dir);S.curDate=d.toISOString().slice(0,10);R();}
+function uJ(k,v){const d=S.curDate;if(!S.journal[d])S.journal[d]={date:d};S.journal[d][k]=v;sv("journal",S.journal);R();}
+function tglSy(sy){const d=S.curDate;if(!S.journal[d])S.journal[d]={date:d,symptoms:[]};if(!S.journal[d].symptoms)S.journal[d].symptoms=[];const a=S.journal[d].symptoms;if(a.includes(sy))S.journal[d].symptoms=a.filter(x=>x!==sy);else a.push(sy);sv("journal",S.journal);R();}
+function subJ(){const d=S.curDate;if(!S.journal[d])S.journal[d]={date:d};S.journal[d].aiR="Noura's AI will respond here once deployed with your API key. I'll read your entry and give you a short, warm insight about your phase and how you're feeling. 🌙";sv("journal",S.journal);R();}
+function handlePhoto(input){
+  if(input.files&&input.files[0]){
+    const reader=new FileReader();
+    reader.onload=function(e){
+      const prev=document.getElementById('photoPreview');
+      if(prev)prev.innerHTML=`<img src="${e.target.result}" style="max-width:100%;border-radius:10px;margin-top:8px"/>`;
+      S.currentPhoto=e.target.result;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+function addM(){if(!S.mealN.trim())return;S.meals.push({name:S.mealN,cal:parseInt(S.mealC)||0,p:parseInt(S.mealP)||0,cb:parseInt(S.mealCb)||0,f:parseInt(S.mealF)||0,type:S.mealT,time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}),photo:S.currentPhoto||null});sv("meals_"+td(),S.meals);S.mealN="";S.mealC="";S.mealP="";S.mealCb="";S.mealF="";S.mealAdd=false;S.currentPhoto=null;S.mealFB="Noura's live recalibration will appear here once deployed. I'll adjust your day warmly based on what you've eaten and your phase. Never with judgment. 🌙";R();}
+function rmM(i){S.meals.splice(i,1);sv("meals_"+td(),S.meals);S.mealFB=null;R();}
+function sendC(){if(!S.chatIn.trim())return;S.chat.push({r:"user",t:S.chatIn},{r:"noura",t:"Noura's chat will be live once deployed with your API key. I'll know your phase, your profile, and your history. 🌙"});S.chatIn="";sv("chat",S.chat);R();}
+function logP(){S.periods=[S.newPD,...S.periods.filter(x=>x!==S.newPD)].sort().reverse();sv("periods",S.periods);if(S.profile){S.profile.periodStart=S.newPD;sv("profile",S.profile);}R();}
+
+R();
+</script>
+</body>
+</html>

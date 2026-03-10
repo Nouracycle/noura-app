@@ -1,0 +1,16 @@
+{
+  "name": "Noura — Cycle-Aware Nutrition",
+  "short_name": "Noura",
+  "description": "Your cycle-aware companion for nutrition and wellbeing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAF8",
+  "theme_color": "#2D2D2D",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
